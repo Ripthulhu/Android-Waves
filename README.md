@@ -39,7 +39,7 @@ without applying it again:
 - **Motion:** panoramic scrolling and its distance, the extra movement from a swipe, and wave
   speed. Setting swipe motion to zero keeps the panorama enabled. Scrolling
   depends on the launcher sending wallpaper offsets.
-  **Navigation particles** adds the recovered XMB particle agitation and small
+  **Swipe sparkles** adds the recovered XMB particle agitation and small
   cloud rotation once per page change. It uses the launcher's page spacing and
   adds no particles or rendering passes. You can switch it off separately.
   **Phone motion** gently bends the waves when you tilt the phone and stirs the
@@ -58,7 +58,7 @@ without applying it again:
 
 Settings use Material 3 controls and follow Android's light or dark theme.
 On Android 12 and newer, the settings screen uses the system colour palette.
-Choose **Appearance → Colour → System colours** to use that palette for the
+Choose **Appearance → Colour mode → System colours** to use that palette for the
 wallpaper too. It updates when your Android palette changes; time-of-day lighting
 and brightness still apply. Older Android versions use a blue fallback palette.
 Seasonal remains the default wallpaper colour setting.

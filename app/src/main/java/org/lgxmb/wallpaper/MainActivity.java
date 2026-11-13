@@ -17,6 +17,7 @@ import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -424,6 +425,8 @@ public final class MainActivity extends AppCompatActivity {
                 .setTitle(title).setView(viewport)
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(R.string.apply, null).create();
+        // Reserve the keyboard area so the dialog scrolls its fields, not its action buttons.
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         dialog.setOnShowListener(ignored -> dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)
                 .setOnClickListener(view -> {
                     if (!hex.getText().toString().trim().matches("#?[0-9a-fA-F]{6}")) {
