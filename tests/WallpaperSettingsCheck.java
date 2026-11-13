@@ -26,15 +26,15 @@ public final class WallpaperSettingsCheck {
                 && defaults.wavePositionPercent == 40 && defaults.scrollStrengthPercent == 20
                 && defaults.panDistancePercent == 30 && defaults.brightnessPercent == 100,
                 "Unexpected motion or brightness defaults");
-        check(defaults.colourMonth == 0 && defaults.timeMode == 0 && defaults.fxaa && defaults.panEnabled,
-                "Seasonal colour, clock, FXAA and scrolling must be enabled by default");
+        check(defaults.colourMonth == WallpaperSettings.COLOUR_SYSTEM && defaults.timeMode == 0 && defaults.fxaa && defaults.panEnabled,
+                "System colour, clock, FXAA and scrolling must be enabled by default");
         check(defaults.navigationParticles, "Navigation particles must be enabled by default");
         check(defaults.lastMonth == 1 && defaults.customPrimary == SystemPalette.FALLBACK_PRIMARY
                 && defaults.customSecondary == SystemPalette.FALLBACK_SECONDARY
                 && defaults.customTertiary == SystemPalette.FALLBACK_TERTIARY,
-                "Custom colours must start with the fallback palette without changing Seasonal mode");
-        check(defaults.screensaverBackgroundPercent == 25 && defaults.screensaverWavePercent == 25
-                && defaults.screensaverSparklePercent == 25, "Screen saver defaults match the TV dim levels");
+                "Custom colours must start with the fallback palette without changing System mode");
+        check(defaults.screensaverBackgroundPercent == 0 && defaults.screensaverWavePercent == 50
+                && defaults.screensaverSparklePercent == 100, "Screen saver defaults must keep sparkles bright above dim waves");
         values.put(WallpaperSettings.SCREENSAVER_BACKGROUND, 0);
         values.put(WallpaperSettings.SCREENSAVER_WAVE, 50);
         values.put(WallpaperSettings.SCREENSAVER_SPARKLE, 100);
@@ -44,12 +44,12 @@ public final class WallpaperSettingsCheck {
         values.put(WallpaperSettings.SCREENSAVER_WAVE, 101);
         values.put(WallpaperSettings.SCREENSAVER_SPARKLE, "100");
         check(read(values).screensaverBackgroundPercent == 0 && read(values).screensaverWavePercent == 100
-                && read(values).screensaverSparklePercent == 25, "Invalid screen saver levels must be safe");
-        check(defaults.phoneMotion && defaults.motionStrengthPercent == 35, "Phone motion defaults must stay gentle");
+                && read(values).screensaverSparklePercent == 100, "Invalid screen saver levels must be safe");
+        check(defaults.phoneMotion && defaults.motionStrengthPercent == 100, "Phone motion must use the selected default strength");
         values.put("phoneMotion", false); values.put("motionStrengthPercent", 80);
         check(!read(values).phoneMotion && read(values).motionStrengthPercent == 80, "Phone motion settings must survive");
         values.put("phoneMotion", "true"); values.put("motionStrengthPercent", "80");
-        check(read(values).phoneMotion && read(values).motionStrengthPercent == 35, "Invalid motion types use defaults");
+        check(read(values).phoneMotion && read(values).motionStrengthPercent == 100, "Invalid motion types use defaults");
         values.put("motionStrengthPercent", -1);
         check(read(values).motionStrengthPercent == 0, "Zero strength must be supported");
         values.put("motionStrengthPercent", 101);
@@ -73,7 +73,7 @@ public final class WallpaperSettingsCheck {
         values.put(WallpaperSettings.COLOUR_MONTH, WallpaperSettings.COLOUR_SYSTEM);
         check(read(values).colourMonth == WallpaperSettings.COLOUR_SYSTEM, "System colours must survive saving");
         values.put(WallpaperSettings.COLOUR_MONTH, "13");
-        check(read(values).colourMonth == 0, "Invalid colour types must keep the Seasonal default");
+        check(read(values).colourMonth == WallpaperSettings.COLOUR_SYSTEM, "Invalid colour types must keep the System default");
 
         for (int legacy = 0; legacy <= 13; legacy++) {
             values.put(WallpaperSettings.COLOUR_MONTH, legacy);

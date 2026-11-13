@@ -57,7 +57,7 @@ public final class WallpaperSettings {
         wavePositionPercent = range(values, WAVE_POSITION, 40, 20, 80);
         scrollStrengthPercent = range(values, SCROLL_STRENGTH, 20, 0, 100);
         panDistancePercent = range(values, PAN_DISTANCE, 30, 0, 100);
-        colourMonth = range(values, COLOUR_MONTH, 0, 0, COLOUR_CUSTOM);
+        colourMonth = range(values, COLOUR_MONTH, COLOUR_SYSTEM, 0, COLOUR_CUSTOM);
         lastMonth = range(values, LAST_MONTH, colourMonth >= 1 && colourMonth <= 12 ? colourMonth : 1, 1, 12);
         customPrimary = number(values, CUSTOM_PRIMARY, SystemPalette.FALLBACK_PRIMARY) | 0xff000000;
         customSecondary = number(values, CUSTOM_SECONDARY, SystemPalette.FALLBACK_SECONDARY) | 0xff000000;
@@ -68,10 +68,10 @@ public final class WallpaperSettings {
         panEnabled = flag(values, PAN_ENABLED, true);
         navigationParticles = flag(values, NAVIGATION_PARTICLES, true);
         phoneMotion = flag(values, PHONE_MOTION, true);
-        motionStrengthPercent = range(values, MOTION_STRENGTH, 35, 0, 100);
-        screensaverBackgroundPercent = range(values, SCREENSAVER_BACKGROUND, 25, 0, 100);
-        screensaverWavePercent = range(values, SCREENSAVER_WAVE, 25, 0, 100);
-        screensaverSparklePercent = range(values, SCREENSAVER_SPARKLE, 25, 0, 100);
+        motionStrengthPercent = range(values, MOTION_STRENGTH, 100, 0, 100);
+        screensaverBackgroundPercent = range(values, SCREENSAVER_BACKGROUND, 0, 0, 100);
+        screensaverWavePercent = range(values, SCREENSAVER_WAVE, 50, 0, 100);
+        screensaverSparklePercent = range(values, SCREENSAVER_SPARKLE, 100, 0, 100);
     }
 
     private static int number(Map<String, ?> values, String key, int fallback) {

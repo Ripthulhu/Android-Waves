@@ -48,8 +48,8 @@ without applying it again:
 - **Rendering:** 30 or 60 fps, resolution, wave mesh, sparkle count and FXAA.
   These are separate controls, so you can choose which details to keep.
 - **Screen saver:** separate brightness levels for the background, waves and
-  sparkles, just like the TV version. Each defaults to 25%; set Sparkle brightness
-  to 100% to keep bright sparkles above a dim scene. The scene dims over 1.2 seconds
+  sparkles, just like the TV version. The defaults are 0% background, 50% waves and 100% sparkles, keeping
+  bright sparkles above a dim scene. The scene dims over 1.2 seconds
   and returns to normal brightness over 160 ms when you touch the screen to exit.
   These levels only affect the screen saver. It shares the wallpaper’s colours,
   time-of-day lighting, motion and rendering settings.
@@ -61,7 +61,7 @@ On Android 12 and newer, the settings screen uses the system colour palette.
 Choose **Appearance → Colour mode → System colours** to use that palette for the
 wallpaper too. It updates when your Android palette changes; time-of-day lighting
 and brightness still apply. Older Android versions use a blue fallback palette.
-Seasonal remains the default wallpaper colour setting.
+System colours are used by default. Phone motion defaults to 100% strength.
 
 ## Build
 
