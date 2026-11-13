@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -419,7 +420,28 @@ public final class MainActivity extends AppCompatActivity {
             }
             @Override public void afterTextChanged(Editable value) {}
         });
-        NestedScrollView viewport = new NestedScrollView(this);
+        NestedScrollView viewport = new NestedScrollView(this) {
+            private final Rect available = new Rect();
+
+            @Override protected void onMeasure(int width, int height) {
+                // Floating dialogs can keep measuring custom content at its pre-keyboard height.
+                getWindowVisibleDisplayFrame(available);
+                View titlePanel = getRootView().findViewById(androidx.appcompat.R.id.topPanel);
+                View buttons = getRootView().findViewById(androidx.appcompat.R.id.buttonPanel);
+                if (available.height() > 0 && titlePanel != null && buttons != null) {
+                    int chrome = titlePanel.getMeasuredHeight() + buttons.getMeasuredHeight();
+                    for (android.view.ViewParent parent = getParent(); parent instanceof View; parent = parent.getParent()) {
+                        View ancestor = (View) parent;
+                        chrome += ancestor.getPaddingTop() + ancestor.getPaddingBottom();
+                    }
+                    int limit = Math.max(0, available.height() - chrome);
+                    if (MeasureSpec.getMode(height) != MeasureSpec.UNSPECIFIED)
+                        limit = Math.min(limit, MeasureSpec.getSize(height));
+                    height = MeasureSpec.makeMeasureSpec(limit, MeasureSpec.AT_MOST);
+                }
+                super.onMeasure(width, height);
+            }
+        };
         viewport.addView(content);
         androidx.appcompat.app.AlertDialog dialog = new MaterialAlertDialogBuilder(this)
                 .setTitle(title).setView(viewport)
