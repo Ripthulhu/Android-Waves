@@ -16,6 +16,11 @@ public final class WallpaperSettings {
     public static final String SCROLL_STRENGTH = "scrollStrengthPercent";
     public static final String COLOUR_MONTH = "colourMonth";
     public static final int COLOUR_SYSTEM = 13;
+    public static final int COLOUR_CUSTOM = 14;
+    public static final String LAST_MONTH = "lastMonth";
+    public static final String CUSTOM_PRIMARY = "customPrimary";
+    public static final String CUSTOM_SECONDARY = "customSecondary";
+    public static final String CUSTOM_TERTIARY = "customTertiary";
     public static final String TIME_MODE = "timeMode";
     public static final String BRIGHTNESS = "brightnessPercent";
     public static final String FXAA = "fxaa";
@@ -31,6 +36,7 @@ public final class WallpaperSettings {
     public final int fps, resolutionPercent, mesh, particleCount;
     public final int waveSpeedPercent, wavePositionPercent, scrollStrengthPercent, panDistancePercent, colourMonth, timeMode, brightnessPercent;
     public final int motionStrengthPercent;
+    public final int lastMonth, customPrimary, customSecondary, customTertiary;
     public final int screensaverBackgroundPercent, screensaverWavePercent, screensaverSparklePercent;
     public final boolean fxaa, panEnabled, navigationParticles, phoneMotion;
 
@@ -51,7 +57,11 @@ public final class WallpaperSettings {
         wavePositionPercent = range(values, WAVE_POSITION, 40, 20, 80);
         scrollStrengthPercent = range(values, SCROLL_STRENGTH, 20, 0, 100);
         panDistancePercent = range(values, PAN_DISTANCE, 30, 0, 100);
-        colourMonth = range(values, COLOUR_MONTH, 0, 0, COLOUR_SYSTEM);
+        colourMonth = range(values, COLOUR_MONTH, 0, 0, COLOUR_CUSTOM);
+        lastMonth = range(values, LAST_MONTH, colourMonth >= 1 && colourMonth <= 12 ? colourMonth : 1, 1, 12);
+        customPrimary = number(values, CUSTOM_PRIMARY, SystemPalette.FALLBACK_PRIMARY) | 0xff000000;
+        customSecondary = number(values, CUSTOM_SECONDARY, SystemPalette.FALLBACK_SECONDARY) | 0xff000000;
+        customTertiary = number(values, CUSTOM_TERTIARY, SystemPalette.FALLBACK_TERTIARY) | 0xff000000;
         timeMode = range(values, TIME_MODE, 0, 0, 2);
         brightnessPercent = range(values, BRIGHTNESS, 100, 25, 100);
         fxaa = flag(values, FXAA, true);

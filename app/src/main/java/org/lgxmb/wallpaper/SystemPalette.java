@@ -1,7 +1,7 @@
 /* LG-XMB, 2026. SPDX-License-Identifier: GPL-3.0-or-later */
 package org.lgxmb.wallpaper;
 
-/** Android colours arrive as sRGB; blend the cached gradient in linear light. */
+/** System and custom colours arrive as sRGB; blend their cached gradients in linear light. */
 final class SystemPalette {
     static final int FALLBACK_PRIMARY = 0xff49617e;
     static final int FALLBACK_SECONDARY = 0xff53606f;

@@ -1,55 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">XMB Waves</string>
-    <string name="description">The LG-XMB waves, adapted for your phone.</string>
+    <string name="description">Animated waves and sparkles.</string>
     <string name="preview">Preview wallpaper</string>
-    <string name="choose_screen">Choose your screens in the preview. Settings apply immediately if the wallpaper is already active.</string>
     <string name="picker_unavailable">The system wallpaper picker is unavailable.</string>
     <string name="appearance">Appearance</string>
     <string name="screensaver">Screen saver</string>
-    <string name="screensaver_help" formatted="false">Choose XMB Waves in Android’s screen saver settings. These levels only apply while the screen saver runs; 100% keeps the normal brightness.</string>
+    <string name="screensaver_help">Brightness while the screen saver runs.</string>
     <string name="screensaver_settings">Screen saver settings</string>
     <string name="screensaver_unavailable">This device does not provide screen saver settings.</string>
     <string name="screensaver_background">Background brightness</string>
     <string name="screensaver_waves">Wave brightness</string>
     <string name="screensaver_sparkles">Sparkle brightness</string>
-    <string name="screensaver_sparkles_help" formatted="false">Keep this at 100% for bright sparkles over a dim background.</string>
+    <string name="screensaver_sparkles_help" formatted="false">100% keeps sparkles bright.</string>
     <string name="motion">Motion</string>
     <string name="rendering">Rendering</string>
-    <string name="colour">Colour</string>
-    <string name="colour_help">Use seasonal colours, follow your Android palette, or keep a fixed month.</string>
+    <string name="colour_mode">Colour mode</string>
+    <string name="month">Month</string>
+    <string name="lower_colour">Lower colour</string>
+    <string name="upper_colour">Upper colour</string>
+    <string name="glow_colour">Glow colour</string>
+    <string name="hex_colour">Hex colour</string>
+    <string name="hex_colour_error">Use six hex digits, for example #49617E.</string>
+    <string name="red">Red</string>
+    <string name="green">Green</string>
+    <string name="blue">Blue</string>
+    <string name="channel_value">%1$s · %2$d</string>
+    <string name="apply">Apply</string>
     <string name="time_of_day">Time of day</string>
-    <string name="time_help">Automatic follows your local clock. Day and Night keep that lighting throughout the day.</string>
+    <string name="time_help">Automatic follows your local time.</string>
     <string name="brightness">Brightness</string>
     <string name="wave_position">Wave position</string>
-    <string name="wave_position_help" formatted="false">Distance from the top of the screen. 50% centres the waves.</string>
+    <string name="wave_position_help" formatted="false">50% centres the waves. Lower values raise them.</string>
     <string name="pan_enabled">Pan across home screens</string>
-    <string name="pan_help">Swipe between home screens to reveal more of the waves. Your launcher must support wallpaper scrolling.</string>
+    <string name="pan_help">Requires a launcher with wallpaper scrolling.</string>
     <string name="pan_distance">Pan distance</string>
-    <string name="pan_distance_help" formatted="false">The first home screen shows the left side of the waves. Lower values give a gentler shift; 100% travels across the full scene. At 0%, that left view stays still.</string>
+    <string name="pan_distance_help" formatted="false">0% keeps the left edge in view; 100% crosses the whole scene.</string>
     <string name="swipe_motion">Swipe motion</string>
-    <string name="swipe_help">Briefly adds movement when you change home screens. At 0%, the panorama still scrolls without the extra movement.</string>
-    <string name="navigation_particles">Navigation particles</string>
-    <string name="navigation_particles_help">The XMB particle response when you change home screens.</string>
+    <string name="swipe_help">Adds a short burst of motion to each swipe.</string>
+    <string name="navigation_particles">Swipe sparkles</string>
+    <string name="navigation_particles_help">Stirs the sparkles when you change home screens.</string>
     <string name="phone_motion">Phone motion</string>
-    <string name="phone_motion_help">Tilt or gently move your phone to stir the waves and sparkles. Only active while the wallpaper is visible.</string>
+    <string name="phone_motion_help">Tilt to bend the waves. Movement stirs the sparkles.</string>
     <string name="motion_strength">Motion strength</string>
     <string name="wave_speed">Wave speed</string>
     <string name="frame_rate">Frame rate</string>
-    <string name="frame_rate_help">60 fps gives smoother motion. 30 fps reduces rendering work.</string>
+    <string name="frame_rate_help">60 fps is smoother; 30 fps reduces rendering work.</string>
     <string name="render_resolution">Render resolution</string>
-    <string name="resolution_help">100% renders at the wallpaper surface size. Lower values draw fewer pixels and soften fine details.</string>
+    <string name="resolution_help">Lower values soften the image and reduce GPU work.</string>
     <string name="wave_mesh">Wave mesh</string>
-    <string name="mesh_help">128 × 128 gives finer wave curves. 64 × 64 uses fewer triangles.</string>
+    <string name="mesh_help">Smaller meshes use fewer triangles.</string>
     <string name="sparkles">Sparkles</string>
-    <string name="sparkles_help">The maximum number of sparkles. Fewer sparkles reduce drawing work. Off also stops their simulation.</string>
+    <string name="sparkles_help">Off also stops the sparkle simulation.</string>
     <string name="fxaa">FXAA</string>
-    <string name="fxaa_help">Smooths the wave edges with a small amount of extra rendering work.</string>
-    <string name="hidden_details">Animation pauses while the wallpaper is hidden.</string>
+    <string name="fxaa_help">Softens jagged wave edges.</string>
     <string name="percent_label">%1$s · %2$d%%</string>
     <string name="percent_value">%1$d%%</string>
-    <string-array name="colour_months">
-        <item>Seasonal</item><item>System colours</item><item>January</item><item>February</item><item>March</item>
+    <string-array name="colour_modes">
+        <item>Seasonal</item><item>System colours</item><item>Monthly</item><item>Custom</item>
+    </string-array>
+    <string-array name="months">
+        <item>January</item><item>February</item><item>March</item>
         <item>April</item><item>May</item><item>June</item><item>July</item>
         <item>August</item><item>September</item><item>October</item><item>November</item><item>December</item>
     </string-array>

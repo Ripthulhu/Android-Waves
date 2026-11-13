@@ -89,6 +89,7 @@ final class WaveScene {
     void configure(WallpaperSettings settings) {
         if (configured == settings) return;
         configured = settings;
+        if (particles.limit > 0 && settings.particleCount == 0) particles.resetEmitterHistory();
         particles.limit = settings.particleCount;
         particles.setNavigationEnabled(settings.navigationParticles && settings.particleCount > 0);
         phoneMotion.configure(settings.phoneMotion, settings.motionStrengthPercent / 100f);

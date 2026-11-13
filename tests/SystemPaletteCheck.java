@@ -22,6 +22,16 @@ public final class SystemPaletteCheck {
             near(encoded * 255, i, .0001);
         }
 
+        SystemPalette custom = new SystemPalette();
+        custom.set(0xff102030, 0xff405060, 0xff708090);
+        float[] savedCustom = custom.linear.clone();
+        palette.set(0xffdd0011, 0xff22bb33, 0xff44aaee);
+        for (int i = 0; i < 9; i++) near(custom.linear[i], savedCustom[i], 0);
+        float[] latestSystem = palette.linear.clone();
+        custom.set(0xffeeeeee, 0xff111111, 0xff0a0b0c);
+        for (int i = 0; i < 9; i++) near(palette.linear[i], latestSystem[i], 0);
+        assert !custom.set(0xffeeeeee, 0xff111111, 0xff0a0b0c) : "Unchanged custom settings must reuse the background cache";
+
         BackgroundClock clock = new BackgroundClock();
         TimeZone zone = TimeZone.getTimeZone("Europe/Amsterdam");
         long time = Instant.parse("2026-11-12T10:00:00Z").toEpochMilli();
@@ -34,6 +44,10 @@ public final class SystemPaletteCheck {
             float daylight = SystemPalette.daylight(clock.nightDayBlend);
             assert Float.isFinite(daylight) && daylight >= 0 && daylight <= 1;
         }
+        clock.update(time, zone, 14, 1);
+        near(SystemPalette.daylight(clock.nightDayBlend), 1, .000001);
+        clock.update(time, zone, 14, 2);
+        near(SystemPalette.daylight(clock.nightDayBlend), 0, .000001);
         System.out.println("System palette checks passed: sRGB conversion, cached updates and day/night lighting");
     }
 }

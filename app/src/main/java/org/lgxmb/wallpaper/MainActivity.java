@@ -7,8 +7,13 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -33,7 +38,11 @@ import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textview.MaterialTextView;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import java.util.Locale;
 import java.util.Map;
+import java.util.function.IntConsumer;
 
 public final class MainActivity extends AppCompatActivity {
     private SharedPreferences preferences;
@@ -79,18 +88,14 @@ public final class MainActivity extends AppCompatActivity {
         };
         content.setOrientation(LinearLayout.VERTICAL);
         content.setPadding(dp(20), dp(8), dp(20), dp(24));
-        text(content, R.string.description, com.google.android.material.R.style.TextAppearance_Material3_BodyLarge, 16);
         MaterialButton preview = new MaterialButton(this);
         preview.setText(R.string.preview);
         preview.setMinHeight(dp(56));
         preview.setOnClickListener(view -> preview());
         content.addView(preview, fullWidth());
-        helper(content, R.string.choose_screen);
 
         LinearLayout appearance = section(content, R.string.appearance);
-        selector(appearance, R.string.colour, R.string.colour_help, WallpaperSettings.COLOUR_MONTH,
-                settings.colourMonth, R.array.colour_months,
-                new int[]{0, WallpaperSettings.COLOUR_SYSTEM, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12});
+        colourSettings(appearance, settings);
         selector(appearance, R.string.time_of_day, R.string.time_help, WallpaperSettings.TIME_MODE,
                 settings.timeMode, R.array.time_modes, new int[]{0, 1, 2});
         slider(appearance, R.string.brightness, 0, WallpaperSettings.BRIGHTNESS, settings.brightnessPercent, 25, 100);
@@ -143,10 +148,6 @@ public final class MainActivity extends AppCompatActivity {
         selector(rendering, R.string.sparkles, R.string.sparkles_help,
                 WallpaperSettings.PARTICLES, settings.particleCount, R.array.particle_counts, new int[]{0, 500, 1000, 2000});
         toggle(rendering, R.string.fxaa, R.string.fxaa_help, WallpaperSettings.FXAA, settings.fxaa);
-        TextView footer = text(content, R.string.hidden_details, com.google.android.material.R.style.TextAppearance_Material3_BodySmall, 0);
-        footer.setPadding(dp(4), dp(20), dp(4), 0);
-        footer.setTextColor(colour(com.google.android.material.R.attr.colorOnSurfaceVariant));
-
         FrameLayout holder = new FrameLayout(this);
         holder.addView(content, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.TOP | Gravity.CENTER_HORIZONTAL));
@@ -221,7 +222,41 @@ public final class MainActivity extends AppCompatActivity {
         help.setTextColor(colour(com.google.android.material.R.attr.colorOnSurfaceVariant));
     }
 
-    private void selector(LinearLayout parent, int title, int help, String key, int selected, int labels, int[] values) {
+    private void colourSettings(LinearLayout parent, WallpaperSettings settings) {
+        boolean monthly = settings.colourMonth >= 1 && settings.colourMonth <= 12;
+        int[] month = {settings.lastMonth};
+        LinearLayout options = column();
+        LinearLayout monthRow = selector(options, R.string.month, 0, month[0], R.array.months,
+                new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}, value -> {
+                    month[0] = value;
+                    preferences.edit().putInt(WallpaperSettings.COLOUR_MONTH, value)
+                            .putInt(WallpaperSettings.LAST_MONTH, value).apply();
+                });
+        LinearLayout custom = column();
+        colourSwatch(custom, R.string.lower_colour, WallpaperSettings.CUSTOM_PRIMARY, settings.customPrimary);
+        colourSwatch(custom, R.string.upper_colour, WallpaperSettings.CUSTOM_SECONDARY, settings.customSecondary);
+        colourSwatch(custom, R.string.glow_colour, WallpaperSettings.CUSTOM_TERTIARY, settings.customTertiary);
+        options.addView(custom, fullWidth());
+        selector(parent, R.string.colour_mode, 0, monthly ? -1 : settings.colourMonth,
+                R.array.colour_modes, new int[]{0, WallpaperSettings.COLOUR_SYSTEM, -1, WallpaperSettings.COLOUR_CUSTOM},
+                mode -> {
+                    preferences.edit().putInt(WallpaperSettings.COLOUR_MONTH, mode == -1 ? month[0] : mode)
+                            .putInt(WallpaperSettings.LAST_MONTH, month[0]).apply();
+                    monthRow.setVisibility(mode == -1 ? View.VISIBLE : View.GONE);
+                    custom.setVisibility(mode == WallpaperSettings.COLOUR_CUSTOM ? View.VISIBLE : View.GONE);
+                });
+        parent.addView(options, fullWidth());
+        monthRow.setVisibility(monthly ? View.VISIBLE : View.GONE);
+        custom.setVisibility(settings.colourMonth == WallpaperSettings.COLOUR_CUSTOM ? View.VISIBLE : View.GONE);
+    }
+
+    private LinearLayout selector(LinearLayout parent, int title, int help, String key, int selected, int labels, int[] values) {
+        return selector(parent, title, help, selected, labels, values,
+                value -> preferences.edit().putInt(key, value).apply());
+    }
+
+    private LinearLayout selector(LinearLayout parent, int title, int help, int selected, int labels,
+                                  int[] values, IntConsumer onSelected) {
         LinearLayout row = setting(parent);
         LinearLayout line = new LinearLayout(this);
         line.setGravity(Gravity.CENTER_VERTICAL);
@@ -241,10 +276,26 @@ public final class MainActivity extends AppCompatActivity {
         for (int i = 0; i < values.length; i++) if (values[i] == selected) current[0] = i;
         valueText.setText(options[current[0]]);
         describeSelector(row, title, help, options[current[0]]);
+        makeButton(row);
+        row.setOnClickListener(view -> new MaterialAlertDialogBuilder(this)
+                .setTitle(title)
+                .setSingleChoiceItems(options, current[0], (dialog, position) -> {
+                    current[0] = position;
+                    onSelected.accept(values[position]);
+                    valueText.setText(options[position]);
+                    describeSelector(row, title, help, options[position]);
+                    dialog.dismiss();
+                })
+                .setNegativeButton(android.R.string.cancel, null).show());
+        return row;
+    }
+
+    private void makeButton(LinearLayout row) {
         row.setFocusable(true);
+        row.setMinimumHeight(dp(48));
         row.setDescendantFocusability(LinearLayout.FOCUS_BLOCK_DESCENDANTS);
-        line.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
-        if (help != 0) row.getChildAt(1).setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        for (int i = 0; i < row.getChildCount(); i++)
+            row.getChildAt(i).setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
         row.setAccessibilityDelegate(new View.AccessibilityDelegate() {
             @Override public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo info) {
                 super.onInitializeAccessibilityNodeInfo(view, info);
@@ -254,20 +305,136 @@ public final class MainActivity extends AppCompatActivity {
         TypedValue ripple = new TypedValue();
         getTheme().resolveAttribute(android.R.attr.selectableItemBackground, ripple, true);
         row.setBackgroundResource(ripple.resourceId);
-        row.setOnClickListener(view -> new MaterialAlertDialogBuilder(this)
-                .setTitle(title)
-                .setSingleChoiceItems(options, current[0], (dialog, position) -> {
-                    current[0] = position;
-                    preferences.edit().putInt(key, values[position]).apply();
-                    valueText.setText(options[position]);
-                    describeSelector(row, title, help, options[position]);
-                    dialog.dismiss();
-                })
-                .setNegativeButton(android.R.string.cancel, null).show());
     }
 
     private void describeSelector(View row, int title, int help, String value) {
         row.setContentDescription(getString(title) + ", " + value + (help == 0 ? "" : ". " + getString(help)));
+    }
+
+    private void colourSwatch(LinearLayout parent, int title, String key, int selected) {
+        LinearLayout row = setting(parent);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        GradientDrawable swatch = colourShape(selected);
+        View sample = new View(this);
+        sample.setBackground(swatch);
+        LinearLayout.LayoutParams sampleSize = new LinearLayout.LayoutParams(dp(40), dp(40));
+        sampleSize.setMarginEnd(dp(16));
+        row.addView(sample, sampleSize);
+        LinearLayout words = column();
+        text(words, title, com.google.android.material.R.style.TextAppearance_Material3_BodyLarge, 4);
+        TextView value = text(words, 0, com.google.android.material.R.style.TextAppearance_Material3_LabelLarge, 0);
+        value.setTextColor(colour(com.google.android.material.R.attr.colorOnSurfaceVariant));
+        row.addView(words, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+        int[] current = {selected};
+        value.setText(hexColour(selected));
+        describeSelector(row, title, 0, hexColour(selected));
+        makeButton(row);
+        row.setOnClickListener(view -> colourPicker(title, current[0], colour -> {
+            current[0] = colour;
+            preferences.edit().putInt(key, colour).apply();
+            swatch.setColor(colour);
+            value.setText(hexColour(colour));
+            describeSelector(row, title, 0, hexColour(colour));
+        }));
+    }
+
+    private GradientDrawable colourShape(int value) {
+        GradientDrawable shape = new GradientDrawable();
+        shape.setColor(value);
+        shape.setCornerRadius(dp(12));
+        shape.setStroke(dp(1), colour(com.google.android.material.R.attr.colorOutline));
+        return shape;
+    }
+
+    private static String hexColour(int colour) {
+        return String.format(Locale.ROOT, "#%06X", colour & 0x00ffffff);
+    }
+
+    private void colourPicker(int title, int selected, IntConsumer onSelected) {
+        LinearLayout content = column();
+        content.setPadding(dp(24), dp(8), dp(24), 0);
+        GradientDrawable preview = colourShape(selected);
+        View sample = new View(this);
+        sample.setBackground(preview);
+        sample.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        LinearLayout.LayoutParams sampleSize = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(56));
+        sampleSize.bottomMargin = dp(16);
+        content.addView(sample, sampleSize);
+        TextInputLayout hexField = new TextInputLayout(this);
+        hexField.setBoxBackgroundMode(TextInputLayout.BOX_BACKGROUND_OUTLINE);
+        hexField.setHint(R.string.hex_colour);
+        TextInputEditText hex = new TextInputEditText(hexField.getContext());
+        hex.setSingleLine(true);
+        hex.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
+                | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        hex.setText(hexColour(selected));
+        hexField.addView(hex, fullWidth());
+        content.addView(hexField, fullWidth());
+        int[] current = {selected};
+        boolean[] updating = {false};
+        Slider[] channels = new Slider[3];
+        int[] names = {R.string.red, R.string.green, R.string.blue};
+        for (int i = 0; i < channels.length; i++) {
+            final int channel = i, shift = (2 - i) * 8;
+            TextView label = text(content, 0, com.google.android.material.R.style.TextAppearance_Material3_BodyMedium, 0);
+            label.setPadding(0, dp(16), 0, 0);
+            Slider slider = new Slider(this);
+            channels[i] = slider;
+            slider.setId(View.generateViewId());
+            slider.setValueFrom(0);
+            slider.setValueTo(255);
+            slider.setStepSize(1);
+            slider.setTickVisible(false);
+            slider.setMinimumHeight(dp(48));
+            slider.setContentDescription(getString(names[i]));
+            slider.setValue((selected >> shift) & 255);
+            label.setLabelFor(slider.getId());
+            label.setText(getString(R.string.channel_value, getString(names[i]), Math.round(slider.getValue())));
+            slider.addOnChangeListener((view, value, fromUser) -> {
+                label.setText(getString(R.string.channel_value, getString(names[channel]), Math.round(value)));
+                if (updating[0] || !fromUser) return;
+                current[0] = (current[0] & ~(255 << shift)) | (Math.round(value) << shift);
+                preview.setColor(current[0]);
+                updating[0] = true;
+                hex.setText(hexColour(current[0]));
+                hexField.setError(null);
+                updating[0] = false;
+            });
+            content.addView(slider, fullWidth());
+        }
+        hex.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence value, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence value, int start, int before, int count) {
+                if (updating[0]) return;
+                hexField.setError(null);
+                String entered = value.toString().trim();
+                if (!entered.matches("#?[0-9a-fA-F]{6}")) return;
+                current[0] = Color.parseColor(entered.startsWith("#") ? entered : "#" + entered);
+                preview.setColor(current[0]);
+                updating[0] = true;
+                for (int i = 0; i < channels.length; i++) channels[i].setValue((current[0] >> ((2 - i) * 8)) & 255);
+                updating[0] = false;
+            }
+            @Override public void afterTextChanged(Editable value) {}
+        });
+        NestedScrollView viewport = new NestedScrollView(this);
+        viewport.addView(content);
+        androidx.appcompat.app.AlertDialog dialog = new MaterialAlertDialogBuilder(this)
+                .setTitle(title).setView(viewport)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(R.string.apply, null).create();
+        dialog.setOnShowListener(ignored -> dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE)
+                .setOnClickListener(view -> {
+                    if (!hex.getText().toString().trim().matches("#?[0-9a-fA-F]{6}")) {
+                        hexField.setError(getString(R.string.hex_colour_error));
+                        hex.requestFocus();
+                        return;
+                    }
+                    onSelected.accept(current[0]);
+                    dialog.dismiss();
+                }));
+        dialog.show();
     }
 
     private void slider(LinearLayout parent, int title, int help, String key, int selected, int minimum, int maximum) {

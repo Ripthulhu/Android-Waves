@@ -18,6 +18,7 @@ public final class WaveSceneCheck {
         continuity(reference);
         viewportAndMotion(reference);
         exitPresentation(reference);
+        sparkleToggle(reference);
         System.out.println("Shared scene handoff checks passed");
     }
 
@@ -122,6 +123,44 @@ public final class WaveSceneCheck {
         float seconds = FRAME / 1_000_000_000f;
         wave.advance(seconds);
         particles.advance(seconds);
+    }
+
+    private static void sparkleToggle(JSONObject reference) throws Exception {
+        Map<String, Object> values = new HashMap<>();
+        values.put(WallpaperSettings.PHONE_MOTION, false);
+        values.put(WallpaperSettings.NAVIGATION_PARTICLES, false);
+        WaveScene scene = new WaveScene();
+        scene.initialize(reference);
+        scene.configure(settings(values));
+        Object wallpaper = new Object();
+        scene.activate(wallpaper, false);
+        long time = 1_000_000_000L;
+        scene.advance(wallpaper, time);
+        for (int frame = 0; frame < 120; frame++) scene.advance(wallpaper, time += FRAME);
+        values.put(WallpaperSettings.PARTICLES, 0);
+        scene.configure(settings(values));
+        float[] pausedParticles = scene.particles.instances.clone();
+        float[] previousWave = scene.wave.controls.clone();
+        for (int frame = 0; frame < 600; frame++) scene.advance(wallpaper, time += FRAME);
+        check(Arrays.equals(pausedParticles, scene.particles.instances), "Disabled sparkles must stay paused");
+        check(!Arrays.equals(previousWave, scene.wave.controls), "Waves must keep moving with sparkles disabled");
+
+        values.put(WallpaperSettings.PARTICLES, 2000);
+        scene.configure(settings(values));
+        scene.advance(wallpaper, time += FRAME);
+        check(!hasFreshBirth(scene.particles), "Resume must sample the current wave before creating new sparkles");
+        boolean resumedBirths = false;
+        for (int frame = 0; frame < 30; frame++) {
+            scene.advance(wallpaper, time += FRAME);
+            resumedBirths |= hasFreshBirth(scene.particles);
+        }
+        check(resumedBirths, "Sparkles must resume normal emission after their samples are refreshed");
+    }
+
+    private static boolean hasFreshBirth(ParticleSimulation particles) {
+        for (int i = 0; i < particles.instanceCount; i++)
+            if (particles.instances[i * 8 + 3] == 0) return true;
+        return false;
     }
 
     private static void exitPresentation(JSONObject reference) throws Exception {

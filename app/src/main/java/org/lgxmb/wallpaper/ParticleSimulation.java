@@ -206,6 +206,8 @@ public final class ParticleSimulation {
     public void setPhoneAgitation(float amount) {
         phoneAgitation = Float.isFinite(amount) ? Math.max(0, Math.min(.6f, amount)) : 0;
     }
+    // Waves keep moving while sparkles are off; old samples cannot measure a new tick's speed.
+    void resetEmitterHistory() { previousCount = 0; }
     private double random() {
         int n=++randomCounter;n^=n<<13;
         int bits=(n*(n*n*15731+789221)+1376312589)&0x7fffffff;

@@ -1,5 +1,16 @@
 # Renderer checks
 
+Run all checks on Linux with JDK 21, Node and `ANDROID_HOME` set to an SDK with
+platform 37.0 installed:
+
+```sh
+bash tools/check.sh /path/to/LG-XMB
+```
+
+Use LG-XMB revision `a2c0602238099696b4e88caf76aa4d772304b488` for the comparison
+fixtures. CI checks out that revision automatically. The commands below run checks
+individually.
+
 The simulation check compares every control point and packed particle against the
 original LG-XMB JavaScript at different frame rates, a clock wrap and all four
 deformation programs. The initial port passes all eight cases with zero float error.
@@ -156,6 +167,7 @@ invalid stored values. It uses the Android SDK interface with a small Java proxy
 
 ```sh
 javac -cp "$ANDROID_HOME/platforms/android-37.0/android.jar" -d .build/settings-check \
+  app/src/main/java/org/lgxmb/wallpaper/SystemPalette.java \
   app/src/main/java/org/lgxmb/wallpaper/WallpaperSettings.java tests/WallpaperSettingsCheck.java
 java -cp ".build/settings-check:$ANDROID_HOME/platforms/android-37.0/android.jar" \
   org.lgxmb.wallpaper.WallpaperSettingsCheck

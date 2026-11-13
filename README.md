@@ -13,7 +13,8 @@ The waves sit slightly above centre by default, leaving room for app icons below
 In portrait, sparkles spread farther vertically after leaving the wave. Their
 birth positions and size stay the same; no extra particles are added.
 
-Install the APK, open **XMB Waves**, then tap **Preview wallpaper**. Android shows
+Download the APK from [Releases](https://github.com/Ripthulhu/Android-Waves/releases/latest),
+install it, open **XMB Waves**, then tap **Preview wallpaper**. Android shows
 its own preview and lets you choose where to apply it. The app never changes your
 wallpaper without that confirmation.
 
@@ -31,9 +32,10 @@ permissions, analytics or accounts.
 Open **XMB Waves** to change the settings. Changes apply to an active wallpaper
 without applying it again:
 
-- **Appearance:** seasonal colours, system colours or a fixed month, automatic daylight or fixed
+- **Appearance:** seasonal colours, system colours, a fixed month or a custom palette, automatic daylight or fixed
   day/night lighting, brightness and vertical position. Automatic settings use your local date,
-  time and time zone.
+  time and time zone. Colour mode shows a month selector or three editable colour swatches
+  when needed. Custom colours use RGB sliders or a hex value.
 - **Motion:** panoramic scrolling and its distance, the extra movement from a swipe, and wave
   speed. Setting swipe motion to zero keeps the panorama enabled. Scrolling
   depends on the launcher sending wallpaper offsets.
@@ -105,6 +107,20 @@ and may briefly show an old wallpaper frame.
 
 `tests/` contains the simulation comparison and frame timing checks. See
 `tests/README.md` to run them. `./gradlew build` also runs Android lint.
+
+## Automatic builds and releases
+
+The [Build APK workflow](https://github.com/Ripthulhu/Android-Waves/actions/workflows/build.yml)
+runs the renderer checks, Android lint and APK builds on pushes and pull requests.
+Test APKs are available in the run's artifacts.
+
+For a release, update `versionCode` and `versionName` in `app/build.gradle`, write
+the changes in `RELEASE_NOTES.md`, and push a matching `vX.Y.Z` tag. The workflow
+signs the APK and publishes it under Releases. It uses the notes exactly as written.
+The signing key is stored in GitHub secrets, outside the repository.
+
+Release APKs use a different signing key from earlier development APKs. Switching
+from a development build requires uninstalling it once, which resets its settings.
 
 ## Source and notices
 

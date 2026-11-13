@@ -35,6 +35,7 @@ public final class WaveRenderer {
     private final BackgroundClock clock = new BackgroundClock();
     private final ScrollMotion scroll;
     private final SystemPalette systemPalette = new SystemPalette();
+    private final SystemPalette customPalette = new SystemPalette();
     private final ScreensaverFade screensaver = new ScreensaverFade();
     private final float[] particleProjection = new float[16];
     private final float[] originalProjection = new float[16];
@@ -142,6 +143,8 @@ public final class WaveRenderer {
             timeMode = settings.timeMode;
             clockSecond = Long.MIN_VALUE;
         }
+        if (customPalette.set(settings.customPrimary, settings.customSecondary, settings.customTertiary)
+                && colourMonth == WallpaperSettings.COLOUR_CUSTOM) clockSecond = Long.MIN_VALUE;
         particleLimit = settings.particleCount;
         screensaver.configure(settings.screensaverBackgroundPercent, settings.screensaverWavePercent,
                 settings.screensaverSparklePercent);
@@ -271,9 +274,10 @@ public final class WaveRenderer {
         monthlyTarget.bind();
         glDisable(GL_BLEND);
         glBindVertexArray(fullscreenVao);
-        if (colourMonth == WallpaperSettings.COLOUR_SYSTEM) {
+        if (colourMonth == WallpaperSettings.COLOUR_SYSTEM || colourMonth == WallpaperSettings.COLOUR_CUSTOM) {
+            SystemPalette palette = colourMonth == WallpaperSettings.COLOUR_CUSTOM ? customPalette : systemPalette;
             systemProgram.use();
-            glUniform3fv(systemProgram.location("uPalette"), 3, systemPalette.linear, 0);
+            glUniform3fv(systemProgram.location("uPalette"), 3, palette.linear, 0);
             systemProgram.f("uDaylight", SystemPalette.daylight(clock.nightDayBlend));
         } else {
             monthlyProgram.use();

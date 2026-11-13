@@ -29,6 +29,10 @@ public final class WallpaperSettingsCheck {
         check(defaults.colourMonth == 0 && defaults.timeMode == 0 && defaults.fxaa && defaults.panEnabled,
                 "Seasonal colour, clock, FXAA and scrolling must be enabled by default");
         check(defaults.navigationParticles, "Navigation particles must be enabled by default");
+        check(defaults.lastMonth == 1 && defaults.customPrimary == SystemPalette.FALLBACK_PRIMARY
+                && defaults.customSecondary == SystemPalette.FALLBACK_SECONDARY
+                && defaults.customTertiary == SystemPalette.FALLBACK_TERTIARY,
+                "Custom colours must start with the fallback palette without changing Seasonal mode");
         check(defaults.screensaverBackgroundPercent == 25 && defaults.screensaverWavePercent == 25
                 && defaults.screensaverSparklePercent == 25, "Screen saver defaults match the TV dim levels");
         values.put(WallpaperSettings.SCREENSAVER_BACKGROUND, 0);
@@ -70,6 +74,41 @@ public final class WallpaperSettingsCheck {
         check(read(values).colourMonth == WallpaperSettings.COLOUR_SYSTEM, "System colours must survive saving");
         values.put(WallpaperSettings.COLOUR_MONTH, "13");
         check(read(values).colourMonth == 0, "Invalid colour types must keep the Seasonal default");
+
+        for (int legacy = 0; legacy <= 13; legacy++) {
+            values.put(WallpaperSettings.COLOUR_MONTH, legacy);
+            WallpaperSettings migrated = read(values);
+            check(migrated.colourMonth == legacy, "Existing colour selections must keep their meaning");
+            check(migrated.lastMonth == (legacy >= 1 && legacy <= 12 ? legacy : 1),
+                    "An existing fixed month must initialize the saved Monthly selection");
+        }
+        values.put(WallpaperSettings.LAST_MONTH, 8);
+        values.put(WallpaperSettings.CUSTOM_PRIMARY, 0x00112233);
+        values.put(WallpaperSettings.CUSTOM_SECONDARY, 0x88445566);
+        values.put(WallpaperSettings.CUSTOM_TERTIARY, 0xff778899);
+        for (int mode : new int[]{WallpaperSettings.COLOUR_CUSTOM, WallpaperSettings.COLOUR_SYSTEM, 0, 8,
+                WallpaperSettings.COLOUR_CUSTOM}) {
+            values.put(WallpaperSettings.COLOUR_MONTH, mode);
+            WallpaperSettings switched = read(values);
+            check(switched.colourMonth == mode && switched.lastMonth == 8,
+                    "Switching colour modes must keep the last picked month");
+            check(switched.customPrimary == 0xff112233 && switched.customSecondary == 0xff445566
+                    && switched.customTertiary == 0xff778899,
+                    "Switching colour modes must preserve each opaque custom colour");
+        }
+        WallpaperSettings savedCustom = read(values);
+        values.put(WallpaperSettings.CUSTOM_PRIMARY, "#aabbcc");
+        values.put(WallpaperSettings.CUSTOM_SECONDARY, 0L);
+        values.put(WallpaperSettings.CUSTOM_TERTIARY, null);
+        values.put(WallpaperSettings.LAST_MONTH, "August");
+        WallpaperSettings invalidCustom = read(values);
+        check(savedCustom.customPrimary == 0xff112233, "Changing saved values must not mutate an existing snapshot");
+        check(invalidCustom.customPrimary == SystemPalette.FALLBACK_PRIMARY
+                && invalidCustom.customSecondary == SystemPalette.FALLBACK_SECONDARY
+                && invalidCustom.customTertiary == SystemPalette.FALLBACK_TERTIARY && invalidCustom.lastMonth == 1,
+                "Invalid custom colour types must use safe defaults");
+        values.put(WallpaperSettings.LAST_MONTH, 99);
+        check(read(values).lastMonth == 12, "Saved months must remain within the calendar");
 
         values.put("fps", "60"); values.put("resolutionPercent", 50L); values.put("mesh", true);
         values.put("particleCount", 123); values.put("waveSpeedPercent", -1);
