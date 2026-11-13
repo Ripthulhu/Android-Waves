@@ -1,0 +1,27 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'org.lgxmb.wallpaper'
+    compileSdk {
+        version = release(37) { minorApiLevel = 0 }
+    }
+
+    defaultConfig {
+        applicationId 'org.lgxmb.wallpaper'
+        minSdk 26
+        targetSdk 37
+        versionCode 13
+        versionName '0.4.5'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'com.google.android.material:material:1.14.0'
+}

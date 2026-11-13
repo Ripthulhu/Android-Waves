@@ -1,0 +1,16 @@
+{
+  "app/ps3-native-data.js": "bb46742ffb66a72593061b5fbbbe3808d35750cf809aca9979312ca09e6ac61c",
+  "app/ps3-background-data.js": "77c81ff31849002500865786d7f3bb6288f106321948251758d631902e12b00f",
+  "app/ps3-native-core.js": "bcdc495dcee107dff350ebb4ece1cf6c86858c01ce5a8a9676f7dcb6a4e6fab9",
+  "app/ps3-particle-birth.js": "a06b25cc138eb6c618dec95370629a9e425fbb12b42757977b2d90371385dec4",
+  "shaders/backdropFragment.frag": "1b1396b988ae87de9f5b03cbee356faf78428f81d9593b60ea9eac8649c78c50",
+  "shaders/compositeFragment.frag": "0395ae2fed5cc49c058c596760106f75832a328a3698588e20bc73be15fbe7c3",
+  "shaders/fullscreenVertex.vert": "cc49d2d6e64ca9b0f1df1a07a0ddf7ed586e8325041aab745f440c4532aa5488",
+  "shaders/glareFragment.frag": "2994541dd97a4a2b1b45062126d12b85d9953b5f917ff9f8d64ccb6c0f54d202",
+  "shaders/glareVertex.vert": "323c95723999ac67d4811285769ab0d8b0bc804048ffdd8a2272762b68355128",
+  "shaders/monthlyBackground.frag": "7f20408074e3721bd59b658aa7e04388199fc9322995d0ebed697fb6b40d71ad",
+  "shaders/particleFragment.frag": "d43fd1f895998b0e9a38bdec439771aff3c12bcfbad64ae1095f109c90214dc8",
+  "shaders/particleVertex.vert": "d24023e62510b9babc8722bdee20dea4f1919f775d5c04e61191a7e93e0485d3",
+  "shaders/waveFragment.frag": "a1b45fe605af314416cb5f2eee109d91180d1ce3baff86a40614f8f2b18093bb",
+  "shaders/waveVertex.vert": "362859f7bc2c41a6ced1fdd0e9108bcbe4b88175c62ed7d6928bc2fe09d6c3e8"
+}

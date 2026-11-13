@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.XmbWaves" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/xmb_primary</item>
+        <item name="colorOnPrimary">@color/xmb_on_primary</item>
+        <item name="colorPrimaryContainer">@color/xmb_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/xmb_on_primary_container</item>
+        <item name="colorPrimaryInverse">@color/xmb_inverse_primary</item>
+        <item name="colorSecondary">@color/xmb_secondary</item>
+        <item name="colorOnSecondary">@color/xmb_on_secondary</item>
+        <item name="colorSecondaryContainer">@color/xmb_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/xmb_on_secondary_container</item>
+        <item name="colorTertiary">@color/xmb_tertiary</item>
+        <item name="colorOnTertiary">@color/xmb_on_tertiary</item>
+        <item name="colorTertiaryContainer">@color/xmb_tertiary_container</item>
+        <item name="colorOnTertiaryContainer">@color/xmb_on_tertiary_container</item>
+        <item name="android:colorBackground">@color/xmb_surface</item>
+        <item name="colorOnBackground">@color/xmb_on_surface</item>
+        <item name="colorSurface">@color/xmb_surface</item>
+        <item name="colorOnSurface">@color/xmb_on_surface</item>
+        <item name="colorSurfaceVariant">@color/xmb_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/xmb_on_surface_variant</item>
+        <item name="colorSurfaceInverse">@color/xmb_inverse_surface</item>
+        <item name="colorOnSurfaceInverse">@color/xmb_inverse_on_surface</item>
+        <item name="colorOutline">@color/xmb_outline</item>
+        <item name="colorOutlineVariant">@color/xmb_outline_variant</item>
+        <item name="colorSurfaceDim">@color/xmb_surface_dim</item>
+        <item name="colorSurfaceBright">@color/xmb_surface_bright</item>
+        <item name="colorSurfaceContainerLowest">@color/xmb_surface_container_lowest</item>
+        <item name="colorSurfaceContainerLow">@color/xmb_surface_container_low</item>
+        <item name="colorSurfaceContainer">@color/xmb_surface_container</item>
+        <item name="colorSurfaceContainerHigh">@color/xmb_surface_container_high</item>
+        <item name="colorSurfaceContainerHighest">@color/xmb_surface_container_highest</item>
+        <item name="android:windowBackground">?attr/colorSurface</item>
+    </style>
+</resources>

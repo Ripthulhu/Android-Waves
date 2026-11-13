@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="xmb_primary">#B1C9E9</color>
+    <color name="xmb_on_primary">#19324D</color>
+    <color name="xmb_primary_container">#314A65</color>
+    <color name="xmb_on_primary_container">#D0E4FF</color>
+    <color name="xmb_inverse_primary">#49617E</color>
+    <color name="xmb_secondary">#BBC8DA</color>
+    <color name="xmb_on_secondary">#253140</color>
+    <color name="xmb_secondary_container">#3B4857</color>
+    <color name="xmb_on_secondary_container">#D7E4F6</color>
+    <color name="xmb_tertiary">#A3CFC4</color>
+    <color name="xmb_on_tertiary">#0A372F</color>
+    <color name="xmb_tertiary_container">#244E46</color>
+    <color name="xmb_on_tertiary_container">#BFEBDF</color>
+    <color name="xmb_surface">#101318</color>
+    <color name="xmb_on_surface">#E0E2E8</color>
+    <color name="xmb_surface_variant">#43474E</color>
+    <color name="xmb_on_surface_variant">#C3C6CF</color>
+    <color name="xmb_inverse_surface">#E0E2E8</color>
+    <color name="xmb_inverse_on_surface">#2E3135</color>
+    <color name="xmb_outline">#8D9199</color>
+    <color name="xmb_outline_variant">#43474E</color>
+    <color name="xmb_surface_dim">#101318</color>
+    <color name="xmb_surface_bright">#36393E</color>
+    <color name="xmb_surface_container_lowest">#0B0E13</color>
+    <color name="xmb_surface_container_low">#191C20</color>
+    <color name="xmb_surface_container">#1D2024</color>
+    <color name="xmb_surface_container_high">#272A2F</color>
+    <color name="xmb_surface_container_highest">#32353A</color>
+</resources>
